@@ -1,12 +1,17 @@
 package pages;
 
+import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
-public class ContactUsPageEn extends BasePage {
+import java.time.Duration;
+
+public class ContactsPageEn extends BasePage {
 
     @FindBy(xpath = "//input[@id='name']")
     WebElement nameField;
@@ -16,35 +21,46 @@ public class ContactUsPageEn extends BasePage {
     WebElement messageField;
     @FindBy(xpath =  "//input[@value='Send']")
     WebElement sendBtn;
+    @FindBy(xpath = "//div[@id='container']/h1")
+    WebElement errorMessage;
 
 
-    public ContactUsPageEn (WebDriver driver){
+    public ContactsPageEn(WebDriver driver){
         setDriver(driver);
         PageFactory.initElements(new AjaxElementLocatorFactory(driver, 10), this);
     }
 
-    public ContactUsPageEn fillNameField(String name){
+    public ContactsPageEn fillNameField(String name){
         nameField.click();
         nameField.clear();
         nameField.sendKeys(name);
         return this;
     }
-    public ContactUsPageEn fillEmailField(String email){
+    public ContactsPageEn fillEmailField(String email){
         emailField.click();
         emailField.clear();
         emailField.sendKeys(email);
         return this;
     }
-    public ContactUsPageEn fillMessageField(String text){
+    public ContactsPageEn fillMessageField(String text){
         messageField.click();
         messageField.clear();
         messageField.sendKeys(text);
         return this;
     }
-    public ContactUsPageEn clickBySendButton(){
+    public ContactsPageEn clickBySendButton(){
         sendBtn.click();
-        return new ContactUsPageEn(driver); // InCorrect - returns Mail page (create new page?)
+        return new ContactsPageEn(driver); // InCorrect - returns Mail page (create new page?)
         //https://shishi.co.il/mail/success ->RU
         //https://en.shishi.co.il/mail/send ->En (404 error)
+    }
+    public String getErrorMessage(){
+        try {
+            WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
+            wait.until(ExpectedConditions.visibilityOf(errorMessage));
+            return errorMessage.getText();
+        } catch (TimeoutException e){
+            return e.getMessage();
+        }
     }
 }
