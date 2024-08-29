@@ -1,5 +1,6 @@
 package pages;
 
+import org.openqa.selenium.By;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -58,5 +59,9 @@ public class ContactsPageRu extends BasePage{
         } catch (TimeoutException e){
             return e.getMessage();
         }
+    }
+    public void validationMessage(String text){
+        String message = driver.findElement(By.name(text)).getAttribute("validationMessage");
+        System.out.println(message);
     }
 }
